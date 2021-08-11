@@ -4,6 +4,16 @@
 Created on Fri Mar 5, 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+This script contains all preprocessing steps for the future climate TC hazard
+datasets.
+The input should be given as NetCDF with different return period bands. These are
+converted to GeoTIFF files per return period of the median of all input datasets.
+
 """
 
 import os
@@ -15,7 +25,7 @@ from osgeo import osr
 
 
 # ==============================================================================
-#                               Get paths
+# Get paths
 # ==============================================================================
 current_dir = os.getcwd()
 top_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
@@ -27,10 +37,12 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 
+# ==============================================================================
+# Get GeoTIFFs for each return period, median of all datasets
+# ==============================================================================
 basins = ["EP", "NA", "NI", "SI", "SP", "WP"]
 crs = 4326
 for basin in basins:
-    
     wind_speeds_all_models = []
     for model_dir in os.listdir(future_storm_dir):
         if model_dir.startswith("STORM"):

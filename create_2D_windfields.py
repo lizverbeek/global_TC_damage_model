@@ -2,23 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
-
 @author: Liz Verbeek
 
-TODO: add adaptation from Bloemendaal et al., + reference to code.
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+This script reads the IBTrACS data, performs preprocessing to select suitable 
+TC tracks and converts these to 2D windfields.
+
 """
-
-# """
-# This script is part of Bloemendaal et al, Estimation of global tropical cyclone wind probabilities using the STORM dataset (in review)
-# The script has been developed by Nadia Bloemendaal, Job Dullaart and Sanne Muis. 
-# This script is the master program complementary to holland_model.py. The methodology is heavily inspired by 
-
-# Lin, N., and Chavas, D. ( 2012), On hurricane parametric wind and applications in storm surge modeling, 
-# J. Geophys. Res., 117, D09120, doi:10.1029/2011JD017126.
-
-
-# Copyright (C) 2020 Nadia Bloemendaal. All versions released under GNU General Public License v3.0.
-# """
 
 import os
 import numpy as np
@@ -78,8 +71,8 @@ namelist = np.load(preprocessed_dir + "/NAMELIST_INTERP.npy", allow_pickle=True)
 
 # Change structure to list of dicts per track for easier multiprocessing
 stormlist = [{'nr': i, 'lat': latlist[i], 'lon': lonlist[i], 'time': timelist[i], 
-               'wind': windlist[i], 'pres': preslist[i], 'rmax': rmaxlist[i],
-               'basin': basinlist[i][0]} for i in latlist.keys()]
+              'wind': windlist[i], 'pres': preslist[i], 'rmax': rmaxlist[i],
+              'basin': basinlist[i][0]} for i in latlist.keys()]
 
 # Run wind field computation
 n_cores = mp.cpu_count() - 2

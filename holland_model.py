@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-This script is part of Bloemendaal et al, Estimation of global tropical cyclone wind probabilities using the STORM dataset (in review)
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
 The script has been developed by Nadia Bloemendaal, Job Dullaart and Sanne Muis. 
 This script contains all the formulas necessary for the generation of the Holland model. The methodology is heavily inspired by 
 
-Lin, N., and Chavas, D. ( 2012), On hurricane parametric wind and applications in storm surge modeling, 
-J. Geophys. Res., 117, D09120, doi:10.1029/2011JD017126.
-
-The TC tracks are taken from the STORM model, see 
-
-Bloemendaal, N., Haigh, I.D., de Moel, H. et al. 
-Generation of a global synthetic tropical cyclone hazard dataset using STORM. 
-Sci Data 7, 40 (2020). https://doi.org/10.1038/s41597-020-0381-2
-
 Copyright (C) 2020 Nadia Bloemendaal. All versions released under the GNU General Public License v3.0
+
 """
 
 import numpy as np

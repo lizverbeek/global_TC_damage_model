@@ -5,6 +5,14 @@
 Created on Thu Mar 4, 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+This script contains all functions to convert all storm and exposure data 
+to GeoTIFF files and match their projections and resolution.
+
 """
 
 import os

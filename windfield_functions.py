@@ -5,20 +5,21 @@
 
 @author: Liz Verbeek
 
-TODO: add adaptation from Bloemendaal et al., + reference to code.
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+Code in this script has been adapted from masterprogram.py as used in 
+Bloemendaal et al, Estimation of global tropical cyclone wind probabilities 
+using the STORM dataset. Sci Data 7, 377 (2020). https://doi.org/10.1038/s41597-020-00720-x
+
+This script makes use of holland_model.py, as implemented in
+Bloemendaal et al, Estimation of global tropical cyclone wind probabilities 
+using the STORM dataset. Sci Data 7, 377 (2020). https://doi.org/10.1038/s41597-020-00720-x
+
+This script contains all functions to convert storm tracks to 2D windfields.
+
 """
-
-# """
-# This script is part of Bloemendaal et al, Estimation of global tropical cyclone wind probabilities using the STORM dataset (in review)
-# The script has been developed by Nadia Bloemendaal, Job Dullaart and Sanne Muis. 
-# This script is the master program complementary to holland_model.py. The methodology is heavily inspired by 
-
-# Lin, N., and Chavas, D. ( 2012), On hurricane parametric wind and applications in storm surge modeling, 
-# J. Geophys. Res., 117, D09120, doi:10.1029/2011JD017126.
-
-
-# Copyright (C) 2020 Nadia Bloemendaal. All versions released under GNU General Public License v3.0.
-# """
 
 import os
 import math
@@ -30,38 +31,35 @@ from osgeo import osr
 
 def Basins_WMO(basin, tc_radius=1000.):
     """ 
-    Get boundary coordinates for each of the ocean basins. 
-        
+    Get boundary coordinates for each of the ocean basins.
+
     Arguments:
         basin {string}      -- Ocean basin
+        tc_radius {float}   -- Maximum TC radius for basin boundary stretch
 
     Returns:
         lat0 {int}          -- Lower bound latitude
         lat1 {int}          -- Upper bound latitude
         lon0 {int}          -- Left bound longitude
         lon1 {int}          -- Right bound longitude
-
     """
-    if basin == 'EP': # Eastern Pacific
+    if basin == 'EP':       # Eastern Pacific
         lat0, lat1, lon0, lon1 = 5, 60, -180, -75
-    # if basin == 'EP': # Eastern Pacific
-    #     lat0, lat1, lon0, lon1 = 5, 60, 180, 285
-    elif basin == 'NA': #North Atlantic
+    elif basin == 'NA':     # North Atlantic
         lat0, lat1, lon0, lon1 = 5, 60, -105, -1
-    # elif basin == 'NA': #North Atlantic
-    #     lat0, lat1, lon0, lon1 = 5, 60, 255, 359
-    elif basin == 'NI': #North Indian
+    elif basin == 'NI':     # North Indian
         lat0, lat1, lon0, lon1 = 5, 60, 30, 100
-    elif basin == 'SI': #South Indian
+    elif basin == 'SI':     # South Indian
         lat0, lat1, lon0, lon1 = -60, -5, 10, 135
-    elif basin == 'SP': #South Pacific
+    elif basin == 'SP':     # South Pacific
         lat0, lat1, lon0, lon1 = -60, -5, 135, 240
-    elif basin == 'WP': #Western Pacific
+    elif basin == 'WP':     # Western Pacific
         lat0, lat1, lon0, lon1 = 5, 60, 100, 180
     else:
         print("Basin " + basin + " not recognized")
     
     # Add radius in degrees to boundaries so that whole storm fits within basin
+    # and does not get cut off at boundary edges.
     max_distance = tc_radius/111.
     lat0 -= max_distance
     lat1 += max_distance
@@ -158,6 +156,8 @@ def compute_windfield(storm, alpha=0.55, beta_bg=20., SWRF=0.85, CF=0.915,
     """
     Compute the 2D wind field from storm track data using the Holland model.
 
+
+
     Arguments:
         storm {dict}                -- Dict containing all storm variables
 
@@ -220,7 +220,7 @@ def compute_windfield(storm, alpha=0.55, beta_bg=20., SWRF=0.85, CF=0.915,
         # Spyderweb step 3: Subtract background flow from U10 (TC's 10-meter wind speed)
         # For this, first convert U10 to surface level using the SWRF-constant
         # Next, subtract a fraction alpha of the background flow.
-        Usurf = (U10/SWRF) - (bg * alpha)         # 1-min max sustained surface winds
+        Usurf = (U10/SWRF) - (bg * alpha)     # 1-min max sustained surface winds
         P_mesh = np.zeros((xlist.shape))
         Pdrop_mesh = np.zeros((xlist.shape))
         up = np.zeros((xlist.shape))
@@ -231,8 +231,8 @@ def compute_windfield(storm, alpha=0.55, beta_bg=20., SWRF=0.85, CF=0.915,
             r = rlist[0][l]
             Vs, Ps = hm.Holland_model(lat1, P, Usurf, Rmax, r)
             Vs = Vs * SWRF                    # Convert back to 10-min wind speed
-            P_mesh[:, l].fill(Ps/100.)                  # in Pa
-            Pdrop_mesh[:, l].fill((Patm - Ps)/100.)     # in Pa
+            P_mesh[:, l].fill(Ps/100.)
+            Pdrop_mesh[:, l].fill((Patm - Ps)/100.)
             beta = hm.Inflowangle(r, Rmax, lat0)
           
             for k in range(0, n_cols):
@@ -267,7 +267,6 @@ def compute_windfield(storm, alpha=0.55, beta_bg=20., SWRF=0.85, CF=0.915,
 
     for m in range(len(shadowlist)):
         if len(shadowlist[m]) > 0.:
-            # if np.max(shadowlist[m]) >= 18.: (Tropical cyclones only)
             # Create wind field (flattened) raster of maximum wind speeds
             wind_field[m] = np.max(shadowlist[m])
 

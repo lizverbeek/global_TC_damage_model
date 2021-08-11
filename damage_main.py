@@ -4,6 +4,17 @@
 """
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+Together with damage_functions.py, this script contains the final damage computation.
+From the command line, it should be specified which type of vulnerability function 
+should be used ("sigmoid" or "power"); the country of interest (ISO code); and which
+climate scenario ("current" or "future") for the TC hazard datasets should 
+form the input of the model.
+
 """
 
 import os
@@ -153,16 +164,15 @@ for storm in storms:
 # ==============================================================================
 # Compute damage for given country
 # ==============================================================================
-
 print("--------------------------- COUNTRY " + country_code_dict[country] + " --------------------------")
 print("------------------------- Running on " + str(n_cores) + " cores ---------------------")
 print()
 
 if vul_func == "sigmoid":
-    # Run vhalf optimization for regional optimal vthresh value
+    # Run model with regional optimal sigmoidal function vthresh parameters
     if (basin_dict[country] == "OC" or basin_dict[country] == "SI" 
         or basin_dict[country] == "NA3" or basin_dict[country] == "NA4"):
-        # global vthresh parameter
+        # Use global vthresh parameter
         param1 = 19.5
     elif basin_dict[country] == "NA1":
         param1 = 11.5
@@ -253,10 +263,6 @@ for storm in storms_no_overlap:
     for region in regions_level:
         total_damage[storm][region] = 0.
 
-# # If no storms overlap, go to next country
-# if len(storms_overlap) == 0:
-#     print("No overlap, skipping country")
-#     print()
         
 print("---------------------------------------------------------------------")
 print("Computing damage for storms: ")
@@ -302,15 +308,9 @@ print()
 # ==============================================================================
 damage_df = pd.DataFrame(total_damage)
 damage_df = damage_df.reindex(sorted(damage_df.columns, reverse=True), axis=1)
-# damage_df.columns = damage_df.columns.str.strip("STORM_WIND_SPEEDS_No")
-# damage_df.columns = damage_df.columns.str.strip("_NA")
 if level == 0:
     damage_df["ISO"] = [country_name_dict[country] for country in damage_df.index.values]
     damage_df = damage_df.set_index("ISO")
-# elif level == 1:
-#     damage_df["ISO"] = [level1_name_dict[region] for region in damage_df.index.values]
-# elif level == 2:
-#     damage_df["ISO"] = [level2_name_dict[region] for region in damage_df.index.values]
 
 print("----------------------------------------------------------------------")
 print("------------------------ Resulting damage: ---------------------------")

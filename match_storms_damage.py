@@ -5,6 +5,14 @@
 Created on Mon Apr 19, 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+In this script, damage events from the EM-DAT dataset are matched to TC events
+from the IBTrACS dataset.
+
 """
 
 import os

@@ -5,14 +5,19 @@ Created on Fri Mar 5, 2021
 
 @author: Liz Verbeek
 
-Conversion of NetCDF storm data to GeoTIFF files, resolution matching of 
-GHSL data, surface area data and storm files. Conversion is included for all 
-historical storms and current and future climate NetCDF files.
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+Together with convert_functions.py, this script converts all storm and exposure
+files to GeoTIFF files and matches their projection and resolution by upsampling
+the files with the lowest resolution.
 
 Please note that the resulting files (after resolution matching) take up around
-50 to 100 GB of memory per dataset (historical, current climate conditions or any
-of the 4 different future climate dataset). It is therefore recommended to apply
-only one conversion at a time.
+50 to 100 GB of memory per dataset (historical, current or future climate 
+conditions). It is therefore recommended to apply only one of these conversions 
+at a time.
+
 """
 
 import os
@@ -22,6 +27,7 @@ from convert_functions import netcdf_to_geotiff
 from convert_functions import convert_storms_RP
 from convert_functions import reproject_GHSL
 from convert_functions import match_resolution
+
 
 # ==============================================================================
 nc_variable = "mean"			# NetCDF variable (mean, stdev, conv_5 or conv_95)
@@ -71,14 +77,14 @@ current_storm_dir = convert_storms_RP(current_storm_dir, nc_variable, crs)
 ref_file = exposure_dir + "/" + os.listdir(exposure_dir)[0]
 print("Matching storm files to exposure resolution")
 
-# # Historical storms
-# match_resolution(ref_file, historical_storm_dir, 'average')
+# Historical storms
+match_resolution(ref_file, historical_storm_dir, 'average')
 
 # # Return period storms, current climate
 match_resolution(ref_file, current_storm_dir, "average")
 
-# # Return period storms, future climate, median of models
-# match_resolution(ref_file, future_storm_dir, "average")
+# Return period storms, future climate, median of models
+match_resolution(ref_file, future_storm_dir, "average")
 
 
 # ============================================================================

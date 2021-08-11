@@ -4,32 +4,23 @@
 Created on Thu Mar 4, 2021
 
 @author: Liz Verbeek
-TODO: give reference to Nadias model/preprocessing.
 
-"""
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
 
+Code in this script has been adapted from preprocessing.py as used in 
+Bloemendaal et al, Estimation of global tropical cyclone wind probabilities 
+using the STORM dataset. Sci Data 7, 377 (2020). https://doi.org/10.1038/s41597-020-00720-x
 
-"""
-This module is part of the STORM model
-
-For more information, please see 
-Bloemendaal, N., Haigh, I.D., de Moel, H. et al. 
-Generation of a global synthetic tropical cyclone hazard dataset using STORM. 
-Sci Data 7, 40 (2020). https://doi.org/10.1038/s41597-020-0381-2
-
-Functions described here are part of the data pre-processing. 
-
-Copyright (C) 2020 Nadia Bloemendaal. All versions released under GNU General Public License v3.0
+This script contains all preprocessing steps for selecting suitable TC tracks
+from the IBTrACS dataset.
 
 """
 
 import os
 import sys
 import numpy as np
-import xarray as xr
-
-from datetime import date, timedelta
-from scipy import stats
 
 dir_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 __location__ = os.path.realpath(os.path.join(os.getcwd(), 
@@ -75,7 +66,7 @@ def fill_missing_values(dataset):
     Input: 
         dataset: the respective dataset
     Output:
-        dataset: the dataset extended to fill missing values
+        dataset: the dataset extended with filled values
     
     """
 
@@ -106,8 +97,6 @@ def check_timelist(tlist):
     Check whether the consecutive time steps are 3 hours apart
     Input:
         tlist: list of time steps
-    Output:
-        print tlist if the consecutive time steps are not 3 hours apart
     
     """
 
@@ -120,31 +109,21 @@ def check_timelist(tlist):
 
 def convert_wind_speed(wind, agency):
     """
-    Convert IBTrACS wind speed to 10-min sustained wind speed. 
-    From the official IBTrACS documentation:
-        Maximum sustained wind speed from the WMO agency for the current location.
-        NO adjustment is made for differences in wind speed averaging periods.
-        hurdat/atcf = North Atlantic - U.S. Miami (NOAA NHC) - 1-minute winds
-        tokyo = RSMC Tokyo (JMA) - 10-minute
-        newdelhi = RSMC New Delhi (IMD) - 3-minute
-        reunion = RSMC La Reunion (MFLR) - 10 minute
-        bom = Australian TCWCs (TCWC Perth, Darwin, Brisbane) - 10-minute
-        nadi = RSMC Nadi (FMS) - 10 minute
-        wellington = TCWC Wellington (NZMS) - 10-minute
+    Convert IBTrACS wind speed to 10-min sustained wind speed.
     
     Input: 
         wind: wind speed 
         agency: name of agency
     Output:
-        wind_conv: converted wind       
+        wind_conv: converted wind    
     """
     
-    if agency=='hurdat_epa' or agency=='hurdat_atl' or agency=='newdelhi' or agency=='atcf': #1-minute wind
-        wind_conv=0.88*wind
-    else:
-        wind_conv=wind
+    # Convert for agencies that report 1-minute average
+    if (agency == "hurdat_epa" or agency=="hurdat_atl" 
+        or agency=="newdelhi" or agency=="atcf"):
+        wind = 0.88 * wind
         
-    return wind_conv
+    return wind
 
 
 def extract_data(data, output_path):
@@ -208,48 +187,17 @@ def extract_data(data, output_path):
                 # Check if wind speed values are available at at least one timestep
                 ind = [x for x,v in enumerate(wind_conv)]
 
-                """ (NOT APPLIED) Exclude tropical cyclones."""
-                # nature_list=[x.decode("utf-8") for x in nature[i]]
-                # if 'ET' in nature_list:
-                #     et_idx=nature_list.index('ET')
-                    
-                #     if et_idx>ind[0]:
-                #         end=max(ii for ii in ind if ii<et_idx)
-                #         ind=ind[:end+1]
-                #     else:
-                #         ind=[]
-
-                """ Exclude South Atlantic basin and check availability of 
-                    wind speed values. """
+                # Exclude SA basin and check availability of wind speed values.
                 if (np.all(np.isnan(wind_conv)) == False and len(ind) > 0
-                    and basin[i][ind[0]].decode("utf-8")!='SA'):
-
-                    """ (NOT APPLIED) We consider the timesteps between the first 
-                        and the last moment of maximum wind speed > 18 m/s 
-                        (equal to a tropical storm)"""
-                    # and np.nanmax(wind_conv)>=18.:
-
-                    """ (NOT APPLIED) Check if storm spans multiple time steps,
-                        seems that it always does (always 360, with possible NaN
-                        values), so unneccessary. """
-                    # j0 = ind[0] # First timestep with wind speed value.                        
-                    # if len(ind) > 1: # Check if storm spans multiple time steps.              
-                    #     j1 = ind[-1] # Last timestep with wind speed value.
-                    # else:
-                    #     j0 = ind[0]
-                    #     j1 = j0
+                    and basin[i][ind[0]].decode("utf-8")!="SA"):
 
                     j0 = ind[0]
                     j1 = ind[-1]
                     
-                    # # Save basin (string) and year data
+                    # Save basin (string) and year data
                     basinlist[i].append(basin[i][ind[0]].decode("utf-8"))
                     yearlist[i].append(years[i])
                     namelist[i].append(names[i].decode("utf-8"))
-
-                    # # Save month, basin (index) and year data
-                    # basinlist[i].append(find_basin(basin[i][ind[0]].decode("utf-8")))
-                    # yearlist[i].append(years[i])
                     
                     # Get 3-hourly timesteps with wind speed values
                     time_idx = [j0+x for x,v in enumerate(time[i][j0:j1+1]) 
@@ -267,14 +215,7 @@ def extract_data(data, output_path):
                         for j_idx in range(len(new_time)):
                             j = new_time[j_idx]        
                             latlist[i].append(latitude[i][j])
-                            
-                            # # Convert projection from -180:180 to 0:360.
-                            # # (NOT APPLIED, otherwise does not match NUTS data) 
-                            # if longitude[i][j] < 0.:
-                            #     longitude[i][j] += 360.
 
-                            # Convert projection from 0:360 to -180:180.
-                            # (NOT APPLIED, otherwise does not match NUTS data) 
                             if longitude[i][j] >= 180.:
                                 longitude[i][j] -= 360.
                             
@@ -340,12 +281,12 @@ def extract_data(data, output_path):
     print("Saving datasets at " + output_path)
 
     # Save preprocessed data.
-    np.save(os.path.join(output_path, 'LATLIST_INTERP.npy'), latlist)
-    np.save(os.path.join(output_path, 'LONLIST_INTERP.npy'), lonlist)
-    np.save(os.path.join(output_path, 'TIMELIST_INTERP.npy'), timelist)
-    np.save(os.path.join(output_path, 'WINDLIST_INTERP.npy'), windlist)
-    np.save(os.path.join(output_path, 'PRESLIST_INTERP.npy'), preslist)
-    np.save(os.path.join(output_path, 'RMAXLIST_INTERP.npy'), rmaxlist)
-    np.save(os.path.join(output_path, 'BASINLIST_INTERP.npy'), basinlist)
-    np.save(os.path.join(output_path, 'YEARLIST_INTERP.npy'), yearlist)
-    np.save(os.path.join(output_path, 'NAMELIST_INTERP.npy'), namelist)
+    np.save(os.path.join(output_path, "LATLIST_INTERP.npy"), latlist)
+    np.save(os.path.join(output_path, "LONLIST_INTERP.npy"), lonlist)
+    np.save(os.path.join(output_path, "TIMELIST_INTERP.npy"), timelist)
+    np.save(os.path.join(output_path, "WINDLIST_INTERP.npy"), windlist)
+    np.save(os.path.join(output_path, "PRESLIST_INTERP.npy"), preslist)
+    np.save(os.path.join(output_path, "RMAXLIST_INTERP.npy"), rmaxlist)
+    np.save(os.path.join(output_path, "BASINLIST_INTERP.npy"), basinlist)
+    np.save(os.path.join(output_path, "YEARLIST_INTERP.npy"), yearlist)
+    np.save(os.path.join(output_path, "NAMELIST_INTERP.npy"), namelist)

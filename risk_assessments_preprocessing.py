@@ -20,7 +20,8 @@ current_dir = os.getcwd()
 top_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 results_dir = top_dir + "/results"
 
-target_dir = "/Future_climate_level1regions_powerfunc"
+# Specify target results directory
+target_dir = "/Current_climate_level1regions_sigmoidfunc"
 results_files_dir = results_dir + target_dir
 
 AAD_dict = {}
