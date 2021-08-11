@@ -5,6 +5,19 @@
 Created on Thu May 6, 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+In this script, maximum damage values per country are normalized to match
+the year of the exposure data.
+
+Maximum damage values have been used from 
+Huizinga J, de Moel H, Szewczyk W. Global flood depth-damage functions: 
+Methodology and the database with guidelines. Joint Research Centre (Seville site); 
+2017 Apr. https://doi.org/10.2760/16510
+
 """
 
 import os

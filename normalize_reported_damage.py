@@ -5,6 +5,14 @@
 Created on Thu May 12, 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+In this script, reported damage values are normalized to match the 
+year of the exposure data.
+
 """
 
 import os
@@ -48,14 +56,3 @@ total_damage_df["Damage year 2015"] = total_damage_df["Damage"] * ratio_2015
 total_damage_df = total_damage_df.set_index("Nr")
 
 total_damage_df.to_csv(match_dir + "/storm_damage_matches_ALL.csv")
-
-# plt.bar(total_damage_df["Country"])
-# plt.xticks(rotation="vertical")
-# plt.show()
-
-# # Too big
-# src = rasterio.open(exposure_dir + 
-# 						     "/GHS_BUILT_LDS2000_GLOBE_R2018A_4326_1K_V2_0.tif")
-# exposure_map = src.read(1)
-# plt.imshow(exposure_map)
-# plt.show()

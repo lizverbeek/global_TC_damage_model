@@ -5,6 +5,14 @@
 Created on Sat May 15 2021
 
 @author: Liz Verbeek
+
+This script is part of the TC risk model developed as part of a Master Thesis 
+for the Master's Programme Computational Science at the University of Amsterdam, 
+see https://github.com/lizverbeek/global_TC_risk_model .
+
+This scripts aggregates the results of the model calibration into a single file 
+with all countries.
+
 """
 
 import os
