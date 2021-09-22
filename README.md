@@ -1,2 +1,5 @@
-# global_TC_damage_model
-This repository contains the global tropical cyclone (TC) damage model created as part of a MSc thesis written for the Institute for Environmental Studies of the Vrije Universiteit Amsterdam.
+# Global Tropical Cyclone Risk model
+
+Python implementation of the global TC risk model.
+
+**Requirements:** [NumPy](http://www.numpy.org/), [pandas](https://pandas.pydata.org/), [geopandas](http://geopandas.org/), [seaborn](https://seaborn.pydata.org/), [matplotlib](https://matplotlib.org/)
