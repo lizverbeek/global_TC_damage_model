@@ -21,8 +21,7 @@ import gdal
 import numpy as np
 import netCDF4 as nc
 
-from osgeo import gdal, osr
-from tqdm import tqdm
+from osgeo import osr
 
 def netcdf_to_geotiff(input_path, nc_variable, crs, output_dir):
     """Convert NetCDF to GeoTIFF.
@@ -99,10 +98,9 @@ def convert_storms_RP(storm_dir, nc_variable, crs):
     input_dir = storm_dir + "/NetCDF"
     print("Creating storm GeoTIFFs")
     print("------------------------------------")
-    for storm_file in tqdm(os.listdir(input_dir)):
+    for storm_file in os.listdir(input_dir):
         if re.search("STORM_FIXED_RETURN_PERIODS_*", storm_file):
             storm_path = input_dir + "/" + storm_file
-
             netcdf_to_geotiff(storm_path, nc_variable, crs, output_dir)
 
     print()
@@ -169,7 +167,7 @@ def match_resolution(ref_file, old_dir, resampleAlg):
     # Create high resolution files
     print("------------------------------------")
     files = [file for file in os.listdir(old_dir) if file.split(".")[-1] == "tif"]
-    for file in tqdm(files):
+    for file in files:
         old_file_path = os.path.join(old_dir, file)
         os.system("gdalwarp -tr " + str(xRes) + " " + str(yRes) + 
                   " -q -overwrite -r " + resampleAlg + " " +

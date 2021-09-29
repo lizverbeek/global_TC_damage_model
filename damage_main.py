@@ -19,7 +19,6 @@ form the input of the model.
 
 import os
 import sys
-import csv
 import fiona
 import numpy as np
 import pandas as pd
