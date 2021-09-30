@@ -13,15 +13,13 @@ This project contains the following modules:
 * windfield_functions.py
 
 These modules are used to convert storm tracks (as provided by the [IBTrACS dataset](https://www.ncdc.noaa.gov/ibtracs/)) to 2D windfields, including preprocessing steps to select relevant tracks, filter out missing values etc. \
-After preprocessing, storm tracks are saved as NumPy array files (.npy) per variable needed for windfield conversion (storm name, latitude, longitude, basin, pressure, Rmax, timestep, windspeed and year). After conversion, the 2D windfields are saved as GeoTIFF files per storm.
-\
+After preprocessing, storm tracks are saved as NumPy array files (.npy) per variable needed for windfield conversion (storm name, latitude, longitude, basin, pressure, Rmax, timestep, windspeed and year). After conversion, the 2D windfields are saved as GeoTIFF files per storm. \
 
 ### **Data conversion**
 * convert_main.py
 * convert_functions.py
 
-These modules can be used to convert storm hazard files given in NetCDF format to GeoTIFF files and to match the projection and resolution of these files to the projection and resolution of the exposure files, which should be provided as GeoTIFF files.
-\
+These modules can be used to convert storm hazard files given in NetCDF format to GeoTIFF files and to match the projection and resolution of these files to the projection and resolution of the exposure files, which should be provided as GeoTIFF files. \
 
 ### **Damage computation**
 * damage_main.py
@@ -31,8 +29,7 @@ These modules form the actual damage computation per country for a given vulnera
 Input arguments are: *vulnerability function*, *country*, *climate scenario*. \
 There are two vulnerability functions implemented: "sigmoid" or "power". The implementation of these functions can be found in damage_functions.py . \
 The second argument specifies the country for which damage is computed. The current implementation allows for damages to be aggregated on national or regional levels, which should be specified in the damage_main.py file. \
-Finally, the third input argument of this file specifies the climate scenario for which damages are calculated: "current" or "future".
-\
+Finally, the third input argument of this file specifies the climate scenario for which damages are calculated: "current" or "future". \
 
 
 ## Full model
