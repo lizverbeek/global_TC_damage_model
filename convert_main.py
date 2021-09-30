@@ -34,6 +34,7 @@ nc_variable = "mean"			# NetCDF variable (mean, stdev, conv_5 or conv_95)
 crs = 4326						# CRS for conversion
 # ==============================================================================
 
+
 # ==============================================================================
 # 								Get paths
 # ==============================================================================
@@ -44,6 +45,9 @@ current_storm_dir = storm_dir + "/Current_climate"
 future_storm_dir = (storm_dir + "/Future_climate/ALL_MODELS_MEDIAN/GeoTIFF/EPSG_" 
 				    + str(crs) + "/Original_Res")
 
+# ==============================================================================
+# Choose directory of exposure data
+# ==============================================================================
 # exposure_dir = top_dir + "/data/GHSL_data/World_2000"
 exposure_dir = top_dir + "/data/GHSL_data/World_2015"
 
