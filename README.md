@@ -43,3 +43,12 @@ To run the model for hazards given as NetCDF files, only the second and third st
 
 ### Results
 The output of the damage computation is given as CSV files with estimated damage per region (or country if damage is computed on national level) per return period. From this, risk can be computed as the weighted sum of damage for all storms, where each storm is weighted with a probability of 1/RP (return period).
+
+
+### Data
+Initially, the following datasets have been used in the model:
+* Exposure: [Global Human Settlement Layer (GHSL), built-up area grids](https://ghsl.jrc.ec.europa.eu/download.php).
+* Country and region definitions: [Database of Global Administrative Areas](https://gadm.org/data.html)
+* Maximum damage estimates: [Huizinga et al., 2017](https://publications.jrc.ec.europa.eu/repository/handle/JRC105688)
+
+The storm hazard dataset should be provided by the uset in NetCDF or GeoTIFF format (see above).
