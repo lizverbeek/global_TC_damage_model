@@ -66,10 +66,18 @@ def power_vulnerability_function(storm_map, factor, exp):
 
 def get_max_damage(country, max_damage_dict):
     """ Get maximum damage per km2 for given country, based on maximum damages
-        of Huizinga et al., aggregated from building classes using ratio from
-        Tiggeloven et al.
+        from
+        Jan Huizinga & Hans de Moel & Wojciech Szewczyk, 2017. 
+        "Global flood depth-damage functions: Methodology and the database 
+        with guidelines," 
+        JRC Working Papers JRC105688, Joint Research Centre (Seville site). 
 
-        TODO: insert citation to articles!
+        Maximum damages are aggregated from building classes using ratio 
+        from
+        Tiggeloven, T. et al.: "Global-scale benefit–cost analysis of coastal 
+        flood adaptation to different flood risk drivers using structural measures", 
+        Nat. Hazards Earth Syst. Sci., 20, 1025–1044, 
+        https://doi.org/10.5194/nhess-20-1025-2020, 2020.
 
     Arguments:
         country {string}            -- Country name (as given in max damage file)
@@ -190,6 +198,10 @@ def get_overlapping_storms(storms_overlap, storm, storm_dir, country, country_sh
 def match_rasters(path1, path2):
     """ Get intersection of two raster files. 
         NOTE: raster files should have equal projection and resolution.
+
+        Implementation of this function is based on 
+        Koks. E.E. (2019). DamageScanner: Python tool for disaster damage 
+        assessments. Zenodo. http://doi.org/10.5281/zenodo.2551015
 
     Arguments:
         path1 {string}          -- Path to first raster
